@@ -34,6 +34,17 @@ local defaults = {
         filterHardcore = false,
 		filterKeeperScroll = false,
         filterPosture = false,
+        filterEmeriss = false,
+        filterLethon = false,
+        filterYsondre = false,
+        filterTaerar = false,
+        filterAzuregos = false,
+        filterLordKazzak = false,
+        filterSetis = false,
+        filterTheWillofSoggoth = false,
+        filterAtalzultheSoulreaver = false,
+        filterDoomwalker = false,
+        filterDoomLordKazzak = false,
     },
 }
 
@@ -62,6 +73,19 @@ local function updateFilter()
     filters["%[.-Hardcore.-%]"] = addon.db.profile.filterHardcore or nil
     filters["%[.-Keeper's Scroll.-%]"] = addon.db.profile.filterKeeperScroll or nil
     filters["%[.-Posture Check.-%]"] = addon.db.profile.filterPosture or nil
+	-- Classic World Bosses
+    filters["%[.-Emeriss.-%]"] = addon.db.profile.filterEmeriss or nil
+    filters["%[.-Lethon.-%]"] = addon.db.profile.filterLethon or nil
+    filters["%[.-Ysondre.-%]"] = addon.db.profile.filterYsondre or nil
+    filters["%[.-Taerar.-%]"] = addon.db.profile.filterTaerar or nil
+    filters["%[.-Azuregos.-%]"] = addon.db.profile.filterAzuregos or nil
+    filters["%[.-Lord Kazzak.-%]"] = addon.db.profile.filterLordKazzak or nil
+    filters["%[.-Setis.-%]"] = addon.db.profile.filterSetis or nil
+    filters["%[.-The Will of Soggoth.-%]"] = addon.db.profile.filterTheWillofSoggoth or nil
+    filters["%[.-Atal'zul, the Soulreaver.-%]"] = addon.db.profile.filterAtalzultheSoulreaver or nil    
+    -- TBC World Bosses
+    filters["%[.-Doomwalker.-%]"] = addon.db.profile.filterDoomwalker or nil
+    filters["%[.-Doom Lord Kazzak.-%]"] = addon.db.profile.filterDoomLordKazzak or nil
 end
 
 local function config_toggle_get(info) return addon.db.profile[info[#info]] end
@@ -105,6 +129,17 @@ local options = {
 						r["filterHardcore"] = L["Hardcore Mode Messages"]
 						r["filterKeeperScroll"] = L["Keeper's Scroll Messages"]
 						r["filterPosture"] = L["Posture Check Messages"]
+						r["filterEmeriss"] = L["Emeriss Messages"]
+						r["filterLethon"] = L["Lethon Messages"]
+						r["filterYsondre"] = L["Ysondre Messages"]
+						r["filterTaerar"] = L["Taerar Messages"]
+						r["filterAzuregos"] = L["Azuregos Messages"]
+						r["filterLordKazzak"] = L["Lord Kazzak Messages"]
+						r["filterSetis"] = L["Setis Messages"]
+						r["filterTheWillofSoggoth"] = L["The Will of Soggoth Messages"]
+						r["filterAtalzultheSoulreaver"] = L["Atal'zul the Soulreaver Messages"]
+						r["filterDoomwalker"] = L["Doomwalker Messages"]
+						r["filterDoomLordKazzak"] = L["Doom Lord Kazzak Messages"]
 
 						return r
 					end,
@@ -360,14 +395,21 @@ end
 -- filter system messages to remove various unwanted messages
 local function filterEmote(self, event, msg, ...)
 	if event ~= "CHAT_MSG_EMOTE" or not msg then return false end
-	return addon.db.profile.filterMEA and msg:find("Use this to empower.-powerful enchants")
+	return addon.db.profile.filterMEA and msg:find("Use it to empower.-powerful enchants")
 end
 
--- remove BAU and DP from newcomers and ascension
+local dontParseChannels = {
+	["guild"] = true,
+	["officer"] = true,
+	["raid"] = true,
+	["whisper"] = true,
+}
+
+-- remove some spam from channels not in dontParseChannels
 local function filterChannel(self, event, msg, ...)
 	local channel = select(8, ...)
 	channel = channel:lower()
-	if event ~= "CHAT_MSG_CHANNEL" or not msg or (channel ~= "ascension" and channel ~= "newcomers") then return false end
+	if event ~= "CHAT_MSG_CHANNEL" or not msg or dontParseChannels[channel] then return false end
 
 	local msglower = msg:lower()
 
@@ -381,7 +423,8 @@ end
 -- check that saved variable are initialized
 function XAT:ADDON_LOADED(event, ...)
 	self:UnregisterEvent("ADDON_LOADED")
-
+	C_CVar.Set("holdToCast", 0)
+	C_CVar.Set("holdToCast", 1)
 	if XanAscTweaks == nil then XanAscTweaks = {} end
 end
 
