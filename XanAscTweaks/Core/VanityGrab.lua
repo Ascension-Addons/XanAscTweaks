@@ -110,6 +110,7 @@ function XAT:grabVanity()
 	-- [spellID] = vanityID
 	local nestedSpell = {
 		[571959] = 902229, -- Stargazer's Blessing
+		[499428] = 499587, -- Raid Marker - Bundle
 	}
 
 	local mCache = {}
