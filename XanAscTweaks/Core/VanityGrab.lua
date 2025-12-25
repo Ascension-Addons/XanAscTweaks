@@ -1,7 +1,7 @@
 function XAT:getVanity()
-	DEFAULT_CHAT_FRAME:AddMessage(XAT:setColor("XAT") .. ": " .. #XAT.grablist .. " item(s) left to grab.")
 	local next = table.remove(XAT.grablist)
-	if C_VanityCollection.IsCollectionItemOwned(next) then RequestDeliverVanityCollectionItem(next) end
+	if CheckKnownItem(next) then RequestDeliverVanityCollectionItem(next) end
+	DEFAULT_CHAT_FRAME:AddMessage(XAT:setColor("XAT") .. ": Grabbing " .. VANITY_ITEMS[next].name.. " (" .. next .. "). " .. #XAT.grablist .. " item(s) remaining.")
 	if #XAT.grablist <= 0 then self:CancelTimer(self.getVanityTimer) end
 end
 
@@ -110,6 +110,7 @@ function XAT:grabVanity()
 	-- [spellID] = vanityID
 	local nestedSpell = {
 		[571959] = 902229, -- Stargazer's Blessing
+		[499428] = 499587, -- Raid Marker - Bundle
 	}
 
 	local mCache = {}

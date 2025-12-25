@@ -423,8 +423,6 @@ end
 -- check that saved variable are initialized
 function XAT:ADDON_LOADED(event, ...)
 	self:UnregisterEvent("ADDON_LOADED")
-	C_CVar.Set("holdToCast", 0)
-	C_CVar.Set("holdToCast", 1)
 	if XanAscTweaks == nil then XanAscTweaks = {} end
 end
 
